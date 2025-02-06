@@ -2,7 +2,8 @@ import { ApiSeminar } from '@/api/types';
 import { seminarService } from '@api/services';
 import React, { useEffect, useState } from 'react';
 import SeminarCard from './SeminarCard';
-import { Col, Modal, Row } from 'antd';
+import { Col, Row } from 'antd';
+import DeleteModal from './DeleteModal';
 
 const SeminarList = () => {
   const [seminars, setSeminars] = useState<ApiSeminar[]>([]);
@@ -59,16 +60,12 @@ const SeminarList = () => {
           </Col>
         ))}
       </Row>
-      <Modal
+      <DeleteModal
         open={openDelete}
         onOk={handleDelete}
         onCancel={handleCancel}
-        okText={'Ок'}
-        confirmLoading={loading}
-        cancelText={'Отменить'}
-      >
-        Удалить семинар?
-      </Modal>
+        loading={loading}
+      ></DeleteModal>
     </>
   );
 };
