@@ -23,18 +23,33 @@ const SeminarCard: FC<SeminarCardProps> = ({
 }) => {
   return (
     <Card
-      // style={{ maxWidth: 300 }}
       cover={<img src={photo} alt={title} />}
       actions={[
-        <Button type='text' icon={<EditOutlined />} onClick={() => onEdit()}></Button>,
-        <Button type='text' icon={<DeleteOutlined />} onClick={() => onDelete()}></Button>,
+        <Button
+          type='text'
+          size='large'
+          icon={<EditOutlined />}
+          style={{ width: '90%' }}
+          onClick={() => onEdit()}
+        ></Button>,
+        <Button
+          type='text'
+          size='large'
+          icon={<DeleteOutlined />}
+          style={{ width: '90%' }}
+          onClick={() => onDelete()}
+        ></Button>,
       ]}
     >
       <Typography.Paragraph type='secondary' style={{ marginBottom: 8 }}>
         <CalendarOutlined style={{ marginRight: 6 }} />
         {`${time} ${date}`}
       </Typography.Paragraph>
-      <Card.Meta title={title} description={description}></Card.Meta>
+      <Card.Meta
+        title={title}
+        description={description}
+        style={{ marginBottom: 'auto' }}
+      ></Card.Meta>
     </Card>
   );
 };
