@@ -2,7 +2,7 @@ import { ApiSeminar } from '@/api/types';
 import { seminarService } from '@api/services';
 import React, { useEffect, useState } from 'react';
 import SeminarCard from './SeminarCard';
-import { Col, Row, Spin } from 'antd';
+import { Col, Flex, Row, Spin } from 'antd';
 import DeleteModal from './DeleteModal';
 import EditModal from './EditModal';
 import SeminarContextProvider from './SeminarContext';
@@ -71,27 +71,30 @@ const SeminarList = () => {
   return (
     <>
       {seminars.length > 0 ? (
-        <Row gutter={[16, 16]}>
+        <Row
+          gutter={[16, 16]}
+          justify={{ xs: 'center', sm: 'start' }}
+          style={{
+            marginRight: 'auto',
+            marginLeft: 'auto',
+            paddingBottom: '16px',
+          }}
+        >
           {seminars.map((el) => (
-            <Col
-              key={el.id}
-              flex={'none'}
-              lg={8}
-              sm={12}
-              xs={100}
-              style={{ justifyContent: 'center' }}
-            >
-              <SeminarCard
-                {...el}
-                onDelete={() => {
-                  setOpenDelete(true);
-                  setActiveSeminar(el);
-                }}
-                onEdit={() => {
-                  setOpenEdit(true);
-                  setActiveSeminar(el);
-                }}
-              ></SeminarCard>
+            <Col key={el.id} lg={8} sm={12} xs={100}>
+              <Flex justify='center'>
+                <SeminarCard
+                  {...el}
+                  onDelete={() => {
+                    setOpenDelete(true);
+                    setActiveSeminar(el);
+                  }}
+                  onEdit={() => {
+                    setOpenEdit(true);
+                    setActiveSeminar(el);
+                  }}
+                ></SeminarCard>
+              </Flex>
             </Col>
           ))}
         </Row>
