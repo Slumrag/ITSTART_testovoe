@@ -20,8 +20,6 @@ const SeminarList = () => {
       setLoading(true);
       const response = await seminarService.delete(activeSeminar!.id);
 
-      console.log(response.data);
-
       setSeminars((s) => s.filter((el) => el.id !== response.data.id));
 
       setLoading(false);
@@ -36,8 +34,6 @@ const SeminarList = () => {
     try {
       setLoading(true);
       const response = await seminarService.patch(activeSeminar!.id, newSeminar);
-
-      console.log('response', response.data);
 
       setSeminars((s) => {
         const newElIndex = s.findIndex((el) => el.id === activeSeminar!.id);
@@ -63,7 +59,6 @@ const SeminarList = () => {
     seminarService
       .get()
       .then((res) => {
-        // console.log(res.data);
         setSeminars(res.data);
       })
       .catch((err) => console.log(err));
