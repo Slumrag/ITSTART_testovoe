@@ -42,6 +42,7 @@ const EditModal: FC<EditModalProps> = ({ open, loading = false, onOk, onCancel }
     const newSeminar = { ...seminar };
     newSeminar.title = values.title;
     newSeminar.description = values.description;
+
     const [time, date] = values.datetime.split(' ');
     newSeminar.time = time;
     newSeminar.date = date;
