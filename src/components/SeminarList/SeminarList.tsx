@@ -2,7 +2,7 @@ import { ApiSeminar } from '@/api/types';
 import { seminarService } from '@api/services';
 import React, { useEffect, useState } from 'react';
 import SeminarCard from './SeminarCard';
-import { Col, Row } from 'antd';
+import { Col, Row, Spin } from 'antd';
 import DeleteModal from './DeleteModal';
 import EditModal from './EditModal';
 import SeminarContextProvider from './SeminarContext';
@@ -56,33 +56,43 @@ const SeminarList = () => {
   };
 
   useEffect(() => {
-    seminarService
-      .get()
-      .then((res) => {
-        setSeminars(res.data);
-      })
-      .catch((err) => console.log(err));
+    const loadSeminars = async () => {
+      try {
+        const response = await seminarService.get();
+
+        setSeminars(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    loadSeminars();
   }, []);
 
   return (
     <>
-      <Row gutter={[16, 16]}>
-        {seminars.map((el) => (
-          <Col key={el.id} lg={8} md={12} xs={100}>
-            <SeminarCard
-              {...el}
-              onDelete={() => {
-                setOpenDelete(true);
-                setActiveSeminar(el);
-              }}
-              onEdit={() => {
-                setOpenEdit(true);
-                setActiveSeminar(el);
-              }}
-            ></SeminarCard>
-          </Col>
-        ))}
-      </Row>
+      {seminars.length > 0 ? (
+        <Row gutter={[16, 16]}>
+          {seminars.map((el) => (
+            <Col key={el.id} lg={8} md={12} xs={100}>
+              <SeminarCard
+                {...el}
+                // loading={loading}
+                onDelete={() => {
+                  setOpenDelete(true);
+                  setActiveSeminar(el);
+                }}
+                onEdit={() => {
+                  setOpenEdit(true);
+                  setActiveSeminar(el);
+                }}
+              ></SeminarCard>
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <Spin size='large' fullscreen />
+      )}
+
       <SeminarContextProvider value={activeSeminar}>
         <DeleteModal
           open={openDelete}
