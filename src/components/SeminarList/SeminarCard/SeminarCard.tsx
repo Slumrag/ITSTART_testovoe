@@ -59,8 +59,8 @@ const SeminarCard: FC<SeminarCardProps> = ({
             type='secondary'
             ellipsis={{
               rows: 2,
-              expandable: true,
-              symbol: 'Развернуть',
+              expandable: 'collapsible',
+              symbol: (expanded) => (expanded ? 'Свернуть' : 'Развернуть'),
             }}
           >
             {description}
