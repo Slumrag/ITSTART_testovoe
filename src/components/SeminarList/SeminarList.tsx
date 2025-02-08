@@ -73,10 +73,16 @@ const SeminarList = () => {
       {seminars.length > 0 ? (
         <Row gutter={[16, 16]}>
           {seminars.map((el) => (
-            <Col key={el.id} lg={8} md={12} xs={100}>
+            <Col
+              key={el.id}
+              flex={'none'}
+              lg={8}
+              sm={12}
+              xs={100}
+              style={{ justifyContent: 'center' }}
+            >
               <SeminarCard
                 {...el}
-                // loading={loading}
                 onDelete={() => {
                   setOpenDelete(true);
                   setActiveSeminar(el);

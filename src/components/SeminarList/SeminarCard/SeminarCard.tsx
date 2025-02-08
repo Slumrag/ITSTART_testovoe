@@ -24,7 +24,7 @@ const SeminarCard: FC<SeminarCardProps> = ({
 }) => {
   return (
     <Card
-      style={{ overflow: 'hidden' }}
+      style={{ overflow: 'hidden', maxWidth: 400 }}
       cover={<Image src={photo} alt={title} preview={false} fallback={placeholder} />}
       actions={[
         <Button
@@ -48,7 +48,11 @@ const SeminarCard: FC<SeminarCardProps> = ({
         {`${time} ${date}`}
       </Typography.Paragraph>
       <Card.Meta
-        title={<Typography.Title level={4}>{title}</Typography.Title>}
+        title={
+          <Typography.Title level={4} ellipsis>
+            {title}
+          </Typography.Title>
+        }
         description={
           <Typography.Paragraph
             style={{ minHeight: '3rem', marginBottom: 'auto' }}
