@@ -49,7 +49,7 @@ const SeminarCard: FC<SeminarCardProps> = ({
       </Typography.Paragraph>
       <Card.Meta
         title={
-          <Typography.Title level={4} ellipsis>
+          <Typography.Title level={5} title={title} ellipsis>
             {title}
           </Typography.Title>
         }
