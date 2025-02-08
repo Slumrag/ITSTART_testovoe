@@ -2,15 +2,18 @@ import { ApiSeminar } from '@/api/types';
 import { seminarService } from '@api/services';
 import React, { useEffect, useState } from 'react';
 import SeminarCard from './SeminarCard';
-import { Col, Flex, Row, Spin } from 'antd';
+import { Col, Flex, message, Row, Spin } from 'antd';
 import DeleteModal from './DeleteModal';
 import EditModal from './EditModal';
 import SeminarContextProvider from './SeminarContext';
+import { AxiosError } from 'axios';
 
 const SeminarList = () => {
   const [seminars, setSeminars] = useState<ApiSeminar[]>([]);
+  const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
   const [activeSeminar, setActiveSeminar] = useState<ApiSeminar | null>(null);
+  const [error, setError] = useState<Error | AxiosError>();
 
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -22,11 +25,14 @@ const SeminarList = () => {
 
       setSeminars((s) => s.filter((el) => el.id !== response.data.id));
 
+      messageApi.success('Семинар успешно удалён');
+    } catch (error) {
+      console.error(error);
+      setError(error as AxiosError);
+    } finally {
       setLoading(false);
       setOpenDelete(false);
       setActiveSeminar(null);
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -41,11 +47,14 @@ const SeminarList = () => {
         return s;
       });
 
+      messageApi.success('Семинар успешно изменён');
+    } catch (error) {
+      console.error(error);
+      setError(error as AxiosError);
+    } finally {
       setLoading(false);
       setOpenEdit(false);
       setActiveSeminar(null);
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -54,15 +63,24 @@ const SeminarList = () => {
     setOpenEdit(false);
     setActiveSeminar(null);
   };
+  useEffect(() => {
+    if (error) {
+      messageApi.error(error.message);
+    }
+  }, [error]);
 
   useEffect(() => {
     const loadSeminars = async () => {
       try {
+        setLoading(true);
         const response = await seminarService.get();
 
         setSeminars(response.data);
       } catch (error) {
         console.error(error);
+        setError(error as AxiosError);
+      } finally {
+        setLoading(false);
       }
     };
     loadSeminars();
@@ -70,37 +88,35 @@ const SeminarList = () => {
 
   return (
     <>
-      {seminars.length > 0 ? (
-        <Row
-          gutter={[16, 16]}
-          justify={{ xs: 'center', sm: 'start' }}
-          style={{
-            marginRight: 'auto',
-            marginLeft: 'auto',
-            paddingBottom: '16px',
-          }}
-        >
-          {seminars.map((el) => (
-            <Col key={el.id} lg={8} sm={12} xs={100}>
-              <Flex justify='center'>
-                <SeminarCard
-                  {...el}
-                  onDelete={() => {
-                    setOpenDelete(true);
-                    setActiveSeminar(el);
-                  }}
-                  onEdit={() => {
-                    setOpenEdit(true);
-                    setActiveSeminar(el);
-                  }}
-                ></SeminarCard>
-              </Flex>
-            </Col>
-          ))}
-        </Row>
-      ) : (
-        <Spin size='large' fullscreen />
-      )}
+      {contextHolder}
+      {loading && seminars.length === 0 && <Spin size='large' fullscreen />}
+      <Row
+        gutter={[16, 16]}
+        justify={{ xs: 'center', sm: 'start' }}
+        style={{
+          marginRight: 'auto',
+          marginLeft: 'auto',
+          paddingBottom: '16px',
+        }}
+      >
+        {seminars.map((el) => (
+          <Col key={el.id} lg={8} sm={12} xs={100}>
+            <Flex justify='center'>
+              <SeminarCard
+                {...el}
+                onDelete={() => {
+                  setOpenDelete(true);
+                  setActiveSeminar(el);
+                }}
+                onEdit={() => {
+                  setOpenEdit(true);
+                  setActiveSeminar(el);
+                }}
+              ></SeminarCard>
+            </Flex>
+          </Col>
+        ))}
+      </Row>
 
       <SeminarContextProvider value={activeSeminar}>
         <DeleteModal
