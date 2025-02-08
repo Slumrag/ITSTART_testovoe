@@ -1,6 +1,7 @@
 import { CalendarOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Card, Typography } from 'antd';
+import { Button, Card, Typography, Image } from 'antd';
 import React, { FC } from 'react';
+import placeholder from '@/assets/placeholder.png';
 
 type SeminarCardProps = {
   title: string;
@@ -23,7 +24,8 @@ const SeminarCard: FC<SeminarCardProps> = ({
 }) => {
   return (
     <Card
-      cover={<img src={photo} alt={title} />}
+      style={{ overflow: 'hidden' }}
+      cover={<Image src={photo} alt={title} preview={false} fallback={placeholder} />}
       actions={[
         <Button
           type='text'
