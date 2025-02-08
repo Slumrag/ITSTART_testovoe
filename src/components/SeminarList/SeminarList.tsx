@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import SeminarCard from './SeminarCard';
 import { Col, Row } from 'antd';
 import DeleteModal from './DeleteModal';
+import EditModal from './EditModal';
+import SeminarContextProvider from './SeminarContext';
 
 const SeminarList = () => {
   const [seminars, setSeminars] = useState<ApiSeminar[]>([]);
@@ -11,6 +13,7 @@ const SeminarList = () => {
   const [activeSeminar, setActiveSeminar] = useState<ApiSeminar | null>(null);
 
   const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -29,8 +32,30 @@ const SeminarList = () => {
     }
   };
 
+  const handleEdit = async (newSeminar: ApiSeminar) => {
+    try {
+      setLoading(true);
+      const response = await seminarService.patch(activeSeminar!.id, newSeminar);
+
+      console.log('response', response.data);
+
+      setSeminars((s) => {
+        const newElIndex = s.findIndex((el) => el.id === activeSeminar!.id);
+        s[newElIndex] = response.data;
+        return s;
+      });
+
+      setLoading(false);
+      setOpenEdit(false);
+      setActiveSeminar(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleCancel = () => {
     setOpenDelete(false);
+    setOpenEdit(false);
     setActiveSeminar(null);
   };
 
@@ -38,7 +63,7 @@ const SeminarList = () => {
     seminarService
       .get()
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setSeminars(res.data);
       })
       .catch((err) => console.log(err));
@@ -55,17 +80,28 @@ const SeminarList = () => {
                 setOpenDelete(true);
                 setActiveSeminar(el);
               }}
-              onEdit={() => console.log('edit', el)}
+              onEdit={() => {
+                setOpenEdit(true);
+                setActiveSeminar(el);
+              }}
             ></SeminarCard>
           </Col>
         ))}
       </Row>
-      <DeleteModal
-        open={openDelete}
-        onOk={handleDelete}
-        onCancel={handleCancel}
-        loading={loading}
-      ></DeleteModal>
+      <SeminarContextProvider value={activeSeminar}>
+        <DeleteModal
+          open={openDelete}
+          onOk={handleDelete}
+          onCancel={handleCancel}
+          loading={loading}
+        ></DeleteModal>
+        <EditModal
+          open={openEdit}
+          onOk={handleEdit}
+          onCancel={handleCancel}
+          loading={loading}
+        ></EditModal>
+      </SeminarContextProvider>
     </>
   );
 };
