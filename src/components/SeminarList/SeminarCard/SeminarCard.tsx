@@ -43,14 +43,25 @@ const SeminarCard: FC<SeminarCardProps> = ({
         ></Button>,
       ]}
     >
-      <Typography.Paragraph type='secondary' style={{ marginBottom: 8 }}>
+      <Typography.Paragraph type='secondary' style={{ marginBottom: 0 }}>
         <CalendarOutlined style={{ marginRight: 6 }} />
         {`${time} ${date}`}
       </Typography.Paragraph>
       <Card.Meta
-        title={title}
-        description={description}
-        style={{ marginBottom: 'auto' }}
+        title={<Typography.Title level={4}>{title}</Typography.Title>}
+        description={
+          <Typography.Paragraph
+            style={{ minHeight: '3rem', marginBottom: 'auto' }}
+            type='secondary'
+            ellipsis={{
+              rows: 2,
+              expandable: true,
+              symbol: 'Развернуть',
+            }}
+          >
+            {description}
+          </Typography.Paragraph>
+        }
       ></Card.Meta>
     </Card>
   );
