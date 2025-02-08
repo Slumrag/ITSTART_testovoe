@@ -18,7 +18,7 @@ function App() {
           width: '100%',
         }}
       >
-        <Typography.Title style={{ textAlign: 'center' }}>Seminars</Typography.Title>
+        <Typography.Title style={{ textAlign: 'center' }}>Семинары</Typography.Title>
         <SeminarList></SeminarList>
       </Layout.Content>
     </Layout>
