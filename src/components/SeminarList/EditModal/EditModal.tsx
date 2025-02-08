@@ -37,8 +37,19 @@ const EditModal: FC<EditModalProps> = ({ open, loading = false, onOk, onCancel }
     return newVal;
   };
 
+  const handleSubmit = (values: Values) => {
+    // console.log('values', values);
+    const newSeminar = { ...seminar };
+    newSeminar.title = values.title;
+    newSeminar.description = values.description;
+    const [time, date] = values.datetime.split(' ');
+    newSeminar.time = time;
+    newSeminar.date = date;
+
+    onOk(newSeminar as ApiSeminar);
+  };
+
   useEffect(() => {
-    // console.log(seminar, initialSeminar);
     form.setFieldsValue(initialValues(seminar));
   }, [seminar]);
 
@@ -56,20 +67,7 @@ const EditModal: FC<EditModalProps> = ({ open, loading = false, onOk, onCancel }
       title='Редактировать семинар'
       okButtonProps={{ autoFocus: true, htmlType: 'submit' }}
     >
-      <Form
-        form={form}
-        onFinish={(values) => {
-          console.log('values', values);
-          const newSeminar = { ...seminar };
-          newSeminar.title = values.title;
-          newSeminar.description = values.description;
-          const [time, date] = values.datetime.split(' ');
-          newSeminar.time = time;
-          newSeminar.date = date;
-
-          onOk(newSeminar as ApiSeminar);
-        }}
-      >
+      <Form form={form} onFinish={handleSubmit} layout='vertical'>
         <Form.Item
           label='Дата и время'
           name='datetime'
