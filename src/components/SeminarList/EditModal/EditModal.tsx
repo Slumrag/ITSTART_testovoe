@@ -29,9 +29,6 @@ const EditModal: FC<EditModalProps> = ({ open, loading = false, onOk, onCancel }
   const [form] = Form.useForm<Values>();
   const seminar = useSeminar();
   const initialValues = (seminar: ApiSeminar | null) => {
-    // if (seminar === null) {
-    //   return;
-    // }
     const newVal = {
       title: seminar?.title,
       description: seminar?.description,
@@ -70,23 +67,34 @@ const EditModal: FC<EditModalProps> = ({ open, loading = false, onOk, onCancel }
           newSeminar.time = time;
           newSeminar.date = date;
 
-          // console.log('submit', newSeminar);
           onOk(newSeminar as ApiSeminar);
         }}
       >
         <Form.Item
           label='Дата и время'
           name='datetime'
+          rules={[{ required: true, message: 'Укажите дату' }]}
+          required
           getValueProps={(value) => ({ value: value && dayjs(value, dateTimeFormat) })}
           normalize={(value) => value && dayjs(value).format(dateTimeFormat)}
         >
-          <DatePicker showTime format={dateTimeFormat} locale={ru} />
+          <DatePicker showTime format={dateTimeFormat} locale={ru} minDate={dayjs()} />
         </Form.Item>
-        <Form.Item label='Заголовок' name='title'>
+        <Form.Item
+          label='Заголовок'
+          name='title'
+          required
+          rules={[{ required: true, message: 'Укажите заголовок' }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item label='Описание' name='description'>
-          <Input type='textarea' />
+        <Form.Item
+          label='Описание'
+          name='description'
+          required
+          rules={[{ required: true, message: 'Добавьте описание' }]}
+        >
+          <Input.TextArea />
         </Form.Item>
       </Form>
     </Modal>
